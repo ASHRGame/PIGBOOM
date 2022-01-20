@@ -14,7 +14,6 @@ public class EnemyMove : MonoBehaviour
 
     void FixedUpdate()
     {
-
         if (agent.isActiveAndEnabled == true)
         {
             agent.SetDestination(big.position);

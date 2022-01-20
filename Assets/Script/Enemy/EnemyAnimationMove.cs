@@ -30,7 +30,7 @@ public class EnemyAnimationMove : MonoBehaviour
         if (forward.x < -0.7f && distance < distanceAngry)
         {
             animator.Play("AngryAnimationWalkLeft");
-             agent.speed = 2.5f;
+            agent.speed = 2.5f;
         }
         if (forward.x > 0.7f && distance > distanceAngry)
         {
