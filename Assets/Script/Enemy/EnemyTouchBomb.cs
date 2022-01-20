@@ -11,20 +11,17 @@ public class EnemyTouchBomb : MonoBehaviour
     [SerializeField] private Animator animator;
 
     [SerializeField] private Bomb pigBomb;
+    [SerializeField] private Transform pigTransforms;
+
 
     void OnTriggerEnter2D(Collider2D other)
     {
         Destroy(other.gameObject);
         agent.enabled = false;
-        switch (animator.name)
-        {
-            case "dog_0":
-                PlayAnimationDogDirty();
-                break;
-            case "farmer_0":
-                PlayAnimationFarmerDirty();
-                break;
-        }
+        agent.gameObject.GetComponent<CircleCollider2D>().enabled = false;
+        agent.gameObject.GetComponent<EnemyAnimationMove>().enabled = false;
+        PlayAnimationDirty(((Vector2)pigTransforms.position - (Vector2)transforms.position).normalized,
+        Vector3.Distance(transforms.position, pigTransforms.position));
         pigBomb.isCheck = true;
     }
 
@@ -36,51 +33,28 @@ public class EnemyTouchBomb : MonoBehaviour
             other.gameObject.SetActive(false);
         }
     }
-    private void PlayAnimationDogDirty()
+    private void PlayAnimationDirty(Vector2 forward, float distance)
     {
-        foreach (var state in animator.runtimeAnimatorController.animationClips)
+        if (forward.x < -0.7f)
         {
-            Debug.Log(state.name);
-            if (state.name == "DogAnimationWalkLeft" || state.name == "DogAngryAnimationWalkLeft")
-            {
-                animator.Play("DogDirtyAnimationWalkLeft");
-            }
-            if (state.name == "DogAnimationWalkRight" || state.name == "DogAngryAnimationWalkLeft")
-            {
-                animator.Play("DogDirtyAnimationWalkRight");
-            }
-            if (state.name == "DogAnimationWalkUp" || state.name == "DogAngryAnimationWalkUp")
-            {
-                animator.Play("DogDirtyAnimationWalkUp");
-            }
-            if (state.name == "DogAnimationWalkDown" || state.name == "DogAngryAnimationWalkDown")
-            {
-                animator.Play("DogDirtyAnimationWalkDown");
-            }
+            animator.Play("DirtyAnimationWalkLeft");
+        }
+        if (forward.x > 0.7f)
+        {
+            animator.Play("DirtyAnimationWalkRight");
+        }
+        if (forward.y > 0.7f)
+        {
+            animator.Play("DirtyAnimationWalkUp");
+        }
+        if (forward.y < -0.7f)
+        {
+            animator.Play("DirtyAnimationWalkDown");
         }
     }
 
-    private void PlayAnimationFarmerDirty()
+    private bool IsAnimation(string name)
     {
-        foreach (var state in animator.runtimeAnimatorController.animationClips)
-        {
-            Debug.Log(state.name);
-            if (state.name == "FarmerAnimationWalkLeft" || state.name == "FarmerAngryAnimationWalkLeft")
-            {
-                animator.Play("FarmerDirtyAnimationWalkLeft");
-            }
-            if (state.name == "FarmerAnimationWalkRight" || state.name == "FarmerAngryAnimationWalkLeft")
-            {
-                animator.Play("FarmerDirtyAnimationWalkRight");
-            }
-            if (state.name == "FarmerAnimationWalkUp" || state.name == "FarmerAngryAnimationWalkUp")
-            {
-                animator.Play("FarmerDirtyAnimationWalkUp");
-            }
-            if (state.name == "FarmerAnimationWalkDown" || state.name == "FarmerAngryAnimationWalkDown")
-            {
-                animator.Play("FarmerDirtyAnimationWalkDown");
-            }
-        }
+        return animator.GetCurrentAnimatorStateInfo(0).IsName(name);
     }
 }

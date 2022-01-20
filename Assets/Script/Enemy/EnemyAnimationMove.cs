@@ -1,111 +1,66 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyAnimationMove : MonoBehaviour
 {
     [SerializeField] private Transform transforms;
     [SerializeField] private Animator animator;
 
-    [SerializeField] private Transform bigTransforms;
-    private float lastPositionX;
-    private float lastPositionY;
+    [SerializeField] private Transform pigTransforms;
 
-    private const float distanceAngry = 5.0f; 
+    [SerializeField] private NavMeshAgent agent;
 
-    private const float angle = 25.0f; 
 
-    void Start()
-    {
-        lastPositionX = transforms.position.x;
-        lastPositionY = transforms.position.y;
-    }
+    private const float distanceAngry = 3.0f; 
 
     void Update()
     {
-        switch (animator.name)
-        {
-            case "dog_0":
-                PlayAnimationDog();
-                break;
-            case "farmer_0":
-                PlayAnimationFarmer();
-                break;
-        }
-        lastPositionX = transforms.position.x;
-        lastPositionY = transforms.position.y;
+
+        PlayAnimation(((Vector2)pigTransforms.position - (Vector2)transforms.position).normalized,
+        Vector3.Distance(transforms.position, pigTransforms.position));
     }
 
-
-    private void PlayAnimationDog()
+    private void PlayAnimation(Vector2 forward, float distance)
     {
-        var distance = Vector3.Distance(transforms.position, bigTransforms.position);
-        if (lastPositionX > transforms.position.x && transforms.position.sqrMagnitude < angle && distance > distanceAngry)
+        if (forward.x < -0.7f && distance > distanceAngry)
         {
-            animator.Play("DogAnimationWalkLeft");
+            animator.Play("AnimationWalkLeft");
+            agent.speed = 2f;
         }
-        if (lastPositionX > transforms.position.x && transforms.position.sqrMagnitude < angle && distance < distanceAngry)
+        if (forward.x < -0.7f && distance < distanceAngry)
         {
-            animator.Play("DogAngryAnimationWalkLeft");
+            animator.Play("AngryAnimationWalkLeft");
+             agent.speed = 2.5f;
         }
-        if (lastPositionX < transforms.position.x && transforms.position.sqrMagnitude < angle && distance > distanceAngry)
+        if (forward.x > 0.7f && distance > distanceAngry)
         {
-            animator.Play("DogAnimationWalkRight");
+            animator.Play("AnimationWalkRight");
+            agent.speed = 2f;
         }
-        if (lastPositionX < transforms.position.x && transforms.position.sqrMagnitude < angle && distance < distanceAngry)
+        if (forward.x > 0.7f && distance < distanceAngry)
         {
-            animator.Play("DogAnimationWalkRight");
+            animator.Play("AngryAnimationWalkRight");
+            agent.speed = 2.5f;
         }
-        if (lastPositionY > transforms.position.y && transforms.position.sqrMagnitude > angle && distance > distanceAngry)
+        if (forward.y > 0.7f && distance > distanceAngry)
         {
-            animator.Play("DogAnimationWalkUp");
+            animator.Play("AnimationWalkUp");
+            agent.speed = 2f;
         }
-        if (lastPositionY > transforms.position.y && transforms.position.sqrMagnitude > angle && distance < distanceAngry)
+        if (forward.y > 0.7f  && distance < distanceAngry)
         {
-            animator.Play("DogAngryAnimationWalkUp");
+            animator.Play("AngryAnimationWalkUp");
+            agent.speed = 2.5f;
         }
-        if (lastPositionY < transforms.position.y && transforms.position.sqrMagnitude > angle && distance > distanceAngry)
+        if (forward.y < -0.7f  && distance > distanceAngry)
         {
-            animator.Play("DogAnimationWalkDown");
+            animator.Play("AnimationWalkDown");
+            agent.speed = 2f;
         }
-        if (lastPositionY < transforms.position.y && transforms.position.sqrMagnitude > angle && distance < distanceAngry)
+        if (forward.y < -0.7f  && distance < distanceAngry)
         {
-            animator.Play("DogAngryAnimationWalkDown");
-        }
-    }
-
-    private void PlayAnimationFarmer()
-    {
-        var distance = Vector3.Distance(transforms.position, bigTransforms.position);
-        if (lastPositionX > transforms.position.x && transforms.position.sqrMagnitude < angle && distance > distanceAngry)
-        {
-            animator.Play("FarmerAnimationWalkLeft");
-        }
-        if(lastPositionX > transforms.position.x && transforms.position.sqrMagnitude < angle && distance < distanceAngry)
-        {
-            animator.Play("FarmerAngryAnimationWalkLeft");
-        }
-        if (lastPositionX < transforms.position.x && transforms.position.sqrMagnitude < angle && distance > distanceAngry)
-        {
-            animator.Play("FarmerAnimationWalkRight");
-        }
-        if (lastPositionX < transforms.position.x && transforms.position.sqrMagnitude < angle && distance < distanceAngry)
-        {
-            animator.Play("FarmerAnimationWalkRight");
-        }
-        if (lastPositionY > transforms.position.y && transforms.position.sqrMagnitude > angle && distance > distanceAngry)
-        {
-            animator.Play("FarmerAnimationWalkUp");
-        }
-        if (lastPositionY > transforms.position.y && transforms.position.sqrMagnitude > angle && distance < distanceAngry)
-        {
-            animator.Play("FarmerAngryAnimationWalkUp");
-        }
-        if (lastPositionY < transforms.position.y && transforms.position.sqrMagnitude > angle && distance > distanceAngry)
-        {
-            animator.Play("FarmerAnimationWalkDown");
-        }
-        if (lastPositionY < transforms.position.y && transforms.position.sqrMagnitude > angle && distance < distanceAngry)
-        {
-            animator.Play("FarmerAngryAnimationWalkDown");
+            animator.Play("AngryAnimationWalkDown");
+            agent.speed = 2.5f;
         }
     }
 }
